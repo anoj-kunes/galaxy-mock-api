@@ -1,0 +1,18 @@
+# Attraction Service
+spring:
+  application:
+    name: attraction-service
+  main:
+    allow-bean-definition-overriding: true
+
+mock-service:
+  url: http://localhost:1080
+
+server:
+  servlet:
+    context-path: /galaxy-mock-service
+  port: 8034
+
+
+
+
