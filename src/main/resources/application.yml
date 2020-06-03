@@ -6,7 +6,7 @@ spring:
     allow-bean-definition-overriding: true
 
 mock-service:
-  url: http://localhost:1080
+  url: https://mockserver.dev.passport.lpgdev.co
 
 server:
   servlet:

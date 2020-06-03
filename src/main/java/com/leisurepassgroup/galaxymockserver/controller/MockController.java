@@ -1,5 +1,6 @@
 package com.leisurepassgroup.galaxymockserver.controller;
 
+import com.leisurepassgroup.galaxymockserver.model.request.ExpectationRequest;
 import com.leisurepassgroup.galaxymockserver.service.galaxy.GalaxyService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
