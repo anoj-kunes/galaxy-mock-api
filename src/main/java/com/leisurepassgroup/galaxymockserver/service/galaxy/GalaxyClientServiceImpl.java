@@ -1,6 +1,7 @@
 package com.leisurepassgroup.galaxymockserver.service.galaxy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leisurepassgroup.galaxymockserver.model.request.ExpectationRequest;
 import com.leisurepassgroup.galaxymockserver.model.request.TicketActivationRequest;
 import com.leisurepassgroup.galaxymockserver.model.response.TicketActivationErrorResponse;
 import com.leisurepassgroup.galaxymockserver.model.response.TicketActivationResponse;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.mockserver.mock.Expectation;
 import org.mockserver.model.Header;
 import org.mockserver.model.MediaType;
+import org.mockserver.netty.MockServer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +43,7 @@ public class GalaxyClientServiceImpl implements GalaxyClientService {
     public static final String SUPPLIER_NAME = "LPG_INTEGRATION_TEST";
     public static final String CORRELATION_ID = UUID.randomUUID().toString();
 
+
     public GalaxyClientServiceImpl(@Value("${mock-service.url}") String url, RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
         this.expectationUrl = url + EXPECTATION_URL;
@@ -51,15 +54,18 @@ public class GalaxyClientServiceImpl implements GalaxyClientService {
 
     public void createExpectation(Map<String, Object> expectation) {
         try {
-            Expectation expectation1 = new Expectation(request()
-                    .withHeader(new Header("x-api-key", "abcdef12345"))
+            Expectation expectation1 = new Expectation(
+                    request()
+                            .withHeader(new Header("x-api-key", "abcdef12345"))
+                    .withHeader(new Header("Content-Type", "application/json"))
                     .withMethod("POST")
                     .withPath("/api/hello/world/101")
                     .withBody(objectMapper.writeValueAsString(createDefaultRequest())))
-                    .thenRespond(response().withContentType(MediaType.APPLICATION_JSON)
+                    .thenRespond(response()
+                            .withHeader(new Header("Content-Type", "application/json")).withHeader(new Header("x-api-key", "abcdef12345"))
                             .withStatusCode(201).withBody(objectMapper.writeValueAsString(createDefaultResponse(101, null))));
 
-            var object = objectMapper.writeValueAsString(expectation1);
+            var object = expectation1.toString();
 
             LOG.info("values = {}", object);
 
